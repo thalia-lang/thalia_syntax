@@ -32,7 +32,7 @@
 
 namespace thalia::syntax {
 	class lexer {
-		public:
+		private:
 			using tokens = std::vector<token>;
 			using exceptions = std::vector<exception>;
 
