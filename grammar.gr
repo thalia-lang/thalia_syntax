@@ -1,0 +1,17 @@
+namespace expression {
+	root -> assignment
+	assignment -> lvalue '=' rvalue
+	lvalue -> IDENTIFIER
+	rvalue -> assignment | logic_or
+	logic_or -> logic_and ('||' logic_and)*
+	logic_and -> equality ('&&' equality)*
+	equality -> comparison (('==' | '!=') comparison)*
+	comparison -> term (('>' | '>=' | '<' | '<=') term)*
+	term -> factor (('+' | '-') factor)*
+	factor -> unary (('*' | '/' | '%') unary)*
+	unary -> (('-' | '!') unary) | call | primary
+	call -> primary ('(' (root (',' root)*)? ')')
+	primary -> grouping | literal | IDENTIFIER
+	literal -> INTEGER
+	grouping -> '(' root ')'
+}
