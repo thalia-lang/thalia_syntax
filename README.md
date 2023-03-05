@@ -49,6 +49,8 @@ If everything went well with the compilation we can run the demo:
 ```sh
 ./bin/demo
 ```
+If you run the demo, you should see in the terminal something like:
+![Demo result](https://github.com/vstan02/thalia_syntax/blob/master/demo/assets/demo_result.png?raw=true)
 
 ### Installing
 To install the library run:
