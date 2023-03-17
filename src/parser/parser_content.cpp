@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "thalia/syntax/parser_content.hpp"
+#include "thalia/syntax/parser/parser_content.hpp"
 
 namespace thalia::syntax {
 	extern void parser_content::advance(std::size_t size) {

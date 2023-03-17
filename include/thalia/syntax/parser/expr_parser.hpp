@@ -24,7 +24,7 @@
 
 #include "thalia/syntax/ast.hpp"
 #include "thalia/syntax/node.hpp"
-#include "thalia/syntax/parser_content.hpp"
+#include "thalia/syntax/parser/parser_content.hpp"
 
 namespace thalia::syntax {
 	class expr_parser {

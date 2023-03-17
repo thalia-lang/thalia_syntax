@@ -22,7 +22,7 @@
 #include "thalia/syntax/exprs.hpp"
 #include "thalia/syntax/node.hpp"
 #include "thalia/syntax/token.hpp"
-#include "thalia/syntax/expr_parser.hpp"
+#include "thalia/syntax/parser/expr_parser.hpp"
 
 namespace thalia::syntax {
 	static inline bool is_lvalue(const node<expression>& node) {

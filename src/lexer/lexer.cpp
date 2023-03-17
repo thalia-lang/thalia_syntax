@@ -21,7 +21,7 @@
 #include <algorithm>
 
 #include "thalia/syntax/token.hpp"
-#include "thalia/syntax/lexer.hpp"
+#include "thalia/syntax/lexer/lexer.hpp"
 
 namespace thalia::syntax {
 	struct keyword {

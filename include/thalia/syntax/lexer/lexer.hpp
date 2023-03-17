@@ -24,7 +24,7 @@
 #include <vector>
 
 #include "thalia/syntax/token.hpp"
-#include "thalia/syntax/lexer_content.hpp"
+#include "thalia/syntax/lexer/lexer_content.hpp"
 
 namespace thalia::syntax {
 	class lexer {

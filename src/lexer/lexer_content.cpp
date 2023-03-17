@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "thalia/syntax/lexer_content.hpp"
+#include "thalia/syntax/lexer/lexer_content.hpp"
 
 namespace thalia::syntax {
 	extern void lexer_content::skip_whitespaces() {
