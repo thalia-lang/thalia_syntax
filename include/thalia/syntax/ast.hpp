@@ -1,5 +1,4 @@
-/* AST - Thalia abstract syntax tree nodes
- * Copyright (C) 2023 Stan Vlad <vstan02@protonmail.com>
+/* Copyright (C) 2023 Stan Vlad <vstan02@protonmail.com>
  *
  * This file is part of ThaliaSyntax.
  *

@@ -16,18 +16,32 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef THALIA_SYNTAX_NODE
-#define THALIA_SYNTAX_NODE
+#ifndef THALIA_SYNTAX_PARSER_CONTENT
+#define THALIA_SYNTAX_PARSER_CONTENT
 
-#include <memory>
+#include <cstddef>
 #include <vector>
 
-namespace thalia::syntax {
-	template <typename T>
-	using node = std::shared_ptr<T>;
+#include "thalia/syntax/token.hpp"
 
-	template <typename T>
-	using nodes = std::vector<node<T>>;
+namespace thalia::syntax {
+	class parser_content {
+		public:
+			parser_content(const std::vector<token>& target)
+				: _target(target), _index(0) {}
+
+			bool at_end() const { return _target[_index].type == TknEnd; }
+			bool check(token_type type) const { return !at_end() && _target[_index].type == type; }
+
+			const token& operator*() const { return _target[_index]; }
+
+			bool match(std::vector<token_type> types);
+			void advance(std::size_t size = 1);
+
+		private:
+			const std::vector<token>& _target;
+			std::size_t _index;
+	};
 }
 
-#endif // THALIA_SYNTAX_NODE
+#endif // THALIA_SYNTAX_PARSER_CONTENT

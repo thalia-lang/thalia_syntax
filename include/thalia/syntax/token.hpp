@@ -1,5 +1,4 @@
-/* Token - Thalia lexical tokens
- * Copyright (C) 2023 Stan Vlad <vstan02@protonmail.com>
+/* Copyright (C) 2023 Stan Vlad <vstan02@protonmail.com>
  *
  * This file is part of ThaliaSyntax.
  *
@@ -67,7 +66,7 @@ namespace thalia::syntax {
 		TknOpnBrace,
 		TknClsBrace,
 
-		TknUnknown,
+		TknError,
 		TknEnd
 	};
 

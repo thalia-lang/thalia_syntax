@@ -99,7 +99,7 @@ namespace demo {
 	}
 
 	extern void ast_expr_view::print_node(const char* name, std::size_t deep, bool expand, std::function<void()> print_children) {
-		_out << termcolor::white << tab(deep);
+		_out << tab(deep);
 		_out << termcolor::bright_blue << "Expression";
 		_out << termcolor::white << "::";
 		_out << termcolor::bright_green << name;

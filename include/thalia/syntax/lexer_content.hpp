@@ -1,5 +1,4 @@
-/* Content - Content for the lexical analyzer
- * Copyright (C) 2023 Stan Vlad <vstan02@protonmail.com>
+/* Copyright (C) 2023 Stan Vlad <vstan02@protonmail.com>
  *
  * This file is part of ThaliaSyntax.
  *
@@ -17,16 +16,16 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef THALIA_SYNTAX_CONTENT
-#define THALIA_SYNTAX_CONTENT
+#ifndef THALIA_SYNTAX_LEXER_CONTENT
+#define THALIA_SYNTAX_LEXER_CONTENT
 
 #include <cstddef>
 #include <string>
 
 namespace thalia::syntax {
-	class content {
+	class lexer_content {
 		public:
-			content(const std::string& target)
+			lexer_content(const std::string& target)
 				: _target(target), _line(1), _start(0), _index(0) {}
 
 			void skip_whitespaces();
@@ -53,4 +52,4 @@ namespace thalia::syntax {
 	};
 }
 
-#endif // THALIA_SYNTAX_CONTENT
+#endif // THALIA_SYNTAX_LEXER_CONTENT

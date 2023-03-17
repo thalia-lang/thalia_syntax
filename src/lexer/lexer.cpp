@@ -1,5 +1,4 @@
-/* Lexer - Thalia lexical analyzer
- * Copyright (C) 2023 Stan Vlad <vstan02@protonmail.com>
+/* Copyright (C) 2023 Stan Vlad <vstan02@protonmail.com>
  *
  * This file is part of ThaliaSyntax.
  *
@@ -22,14 +21,9 @@
 #include <algorithm>
 
 #include "thalia/syntax/token.hpp"
-#include "thalia/syntax/exception.hpp"
-
-#include "lexer.hpp"
+#include "thalia/syntax/lexer.hpp"
 
 namespace thalia::syntax {
-	using tokens = std::vector<token>;
-	using exceptions = std::vector<exception>;
-
 	struct keyword {
 		token_type type;
 		std::string value;
@@ -48,96 +42,101 @@ namespace thalia::syntax {
 		{ TknElse, "else" }
 	};
 
-	extern std::pair<tokens, exceptions> lexer::scan() {
-		token current;
-		std::vector<token> result;
-
-		_errors.clear();
-		result.push_back(current);
-		do {
-			current = next_token();
-			result.push_back(current);
-		} while(current.type != TknEnd);
-
-		return std::make_pair(result, _errors);
+	static inline bool is_digit(char ch) {
+		return ch >= '0' && ch <= '9';
 	}
 
-	extern token lexer::next_token() {
+	static inline bool is_alpha(char ch) {
+		return ch == '_' || (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
+	}
+
+	static inline bool is_alphanum(char ch) {
+		return is_alpha(ch) || is_digit(ch);
+	}
+
+	extern std::pair<std::vector<token>, std::vector<lexer::signal>> lexer::scan() {
+		if (!_tokens.empty() || !_signals.empty()) {
+			return std::make_pair(_tokens, _signals);
+		}
+
+		do {
+			scan_next();
+		} while(!_code.is_eof());
+		return std::make_pair(_tokens, _signals);
+	}
+
+	extern void lexer::scan_next() {
 		_code.skip_whitespaces();
 		_code.start();
 
 		if (_code.is_eof()) {
-			return make_token(TknEnd);
+			return push_token(TknEnd);
 		}
 
 		const char ch = *_code;
 		_code.advance();
 
 		if (is_alpha(ch)) {
-			return make_keyword_or_id();
+			return scan_keyword_or_id();
 		}
 
 		if (is_digit(ch)) {
-			return make_number();
+			return scan_number();
 		}
 
 		switch (ch) {
-			case '(': return make_token(TknOpnParen);
-			case ')': return make_token(TknClsParen);
-			case '{': return make_token(TknOpnBrace);
-			case '}': return make_token(TknClsBrace);
-			case '[': return make_token(TknOpnBracket);
-			case ']': return make_token(TknClsBracket);
-			case ',': return make_token(TknComma);
-			case '.': return make_token(TknDot);
-			case ':': return make_token(TknColon);
-			case ';': return make_token(TknSemi);
-			case '-': return make_token(TknMinus);
-			case '+': return make_token(TknPlus);
-			case '/': return make_token(TknSlash);
-			case '*': return make_token(TknStar);
-			case '%': return make_token(TknPercent);
-			case '=': return choose_token('=', TknEqlEqual, TknEqual);
-			case '!': return choose_token('=', TknBngEqual, TknBang);
-			case '<': return choose_token('=', TknLssEqual, TknLess);
-			case '>': return choose_token('=', TknGrtEqual, TknGreater);
-			case '&': return assert_token('&', TknAmpsAmps);
-			case '|': return assert_token('|', TknPipePipe);
+			case '(': return push_token(TknOpnParen);
+			case ')': return push_token(TknClsParen);
+			case '{': return push_token(TknOpnBrace);
+			case '}': return push_token(TknClsBrace);
+			case '[': return push_token(TknOpnBracket);
+			case ']': return push_token(TknClsBracket);
+			case ',': return push_token(TknComma);
+			case '.': return push_token(TknDot);
+			case ':': return push_token(TknColon);
+			case ';': return push_token(TknSemi);
+			case '-': return push_token(TknMinus);
+			case '+': return push_token(TknPlus);
+			case '/': return push_token(TknSlash);
+			case '*': return push_token(TknStar);
+			case '%': return push_token(TknPercent);
+			case '=': return scan_with_choice('=', TknEqlEqual, TknEqual);
+			case '!': return scan_with_choice('=', TknBngEqual, TknBang);
+			case '<': return scan_with_choice('=', TknLssEqual, TknLess);
+			case '>': return scan_with_choice('=', TknGrtEqual, TknGreater);
+			case '&': return scan_with_assertion('&', TknAmpsAmps);
+			case '|': return scan_with_assertion('|', TknPipePipe);
 		}
 
-		token result = make_token(TknUnknown);
-		_errors.push_back(unexpected_character(result));
-		return result;
+		return push_signal(SgnUnexpChr);
 	}
 
-	extern token lexer::choose_token(char expected, token_type first, token_type second) {
+	extern void lexer::scan_with_choice(char expected, token_type first, token_type second) {
 		if (*_code != expected) {
-			return make_token(second);
+			return push_token(second);
 		}
 
 		_code.advance();
-		return make_token(first);
+		return push_token(first);
 	}
 
-	extern token lexer::assert_token(char expected, token_type type) {
+	extern void lexer::scan_with_assertion(char expected, token_type type) {
 		char ch = *_code;
 		_code.advance();
 
 		if (ch != expected) {
-			token result = make_token(TknUnknown);
-			_errors.push_back(unexpected_character(result));
-			return result;
+			return push_signal(SgnUnexpChr);
 		}
 
-		return make_token(type);
+		return push_token(type);
 	}
 
-	extern token lexer::make_number() {
+	extern void lexer::scan_number() {
 		while (is_digit(*_code)) _code.advance();
-		return make_token(TknInt);
+		return push_token(TknInt);
 	}
 
-	extern token lexer::make_keyword_or_id() {
+	extern void lexer::scan_keyword_or_id() {
 		while (is_alphanum(*_code)) _code.advance();
 
 		std::string value = _code.value();
@@ -146,9 +145,18 @@ namespace thalia::syntax {
 			[&](const keyword& target) { return value == target.value; }
 		);
 
-		return token(
+		_tokens.push_back({
 			result == std::end(keywords) ? TknId : result->type,
 			value, _code.line(), _code.position()
-		);
+		});
+	}
+
+	extern void lexer::push_token(token_type type) {
+		_tokens.push_back({ type, _code.value(), _code.line(), _code.position() });
+	}
+
+	extern void lexer::push_signal(lexer::signal_type type) {
+		token token(TknError, _code.value(), _code.line(), _code.position());
+		_signals.push_back({ token, type, _tokens.size() });
 	}
 }

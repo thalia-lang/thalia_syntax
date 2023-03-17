@@ -1,5 +1,4 @@
-/* Content - Content for the lexical analyzer
- * Copyright (C) 2023 Stan Vlad <vstan02@protonmail.com>
+/* Copyright (C) 2023 Stan Vlad <vstan02@protonmail.com>
  *
  * This file is part of ThaliaSyntax.
  *
@@ -17,25 +16,24 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "content.hpp"
+#include "thalia/syntax/parser_content.hpp"
 
 namespace thalia::syntax {
-	extern void content::skip_whitespaces() {
-		while (true) {
-			switch (*(*this)) {
-				case ' ':
-				case '\r':
-				case '\t': {
-					++_index;
-					break;
-				}
-				case '\n': {
-					++_line;
-					++_index;
-					break;
-				}
-				default: return;
+	extern void parser_content::advance(std::size_t size) {
+		if (_index + size < _target.size()) {
+			_index += size;
+		} else {
+			_index = _target.size();
+		}
+	}
+
+	extern bool parser_content::match(std::vector<token_type> types) {
+		for (token_type type: types) {
+			if (check(type)) {
+				advance();
+				return true;
 			}
 		}
+		return false;
 	}
 }

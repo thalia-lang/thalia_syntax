@@ -1,0 +1,15 @@
+expr_root ::= expr_assignment;
+expr_assignment ::= expr_lvalue '=' expr_rvalue;
+expr_lvalue ::= IDENTIFIER;
+expr_rvalue ::= expr_assignment | expr_logic_or;
+expr_logic_or ::= expr_logic_and ('||' expr_logic_and)*;
+expr_logic_and ::= expr_equality ('&&' expr_equality)*;
+expr_equality ::= expr_comparison (('==' | '!=') expr_comparison)*;
+expr_comparison ::= expr_term (('>' | '>=' | '<' | '<=') expr_term)*
+expr_term ::= expr_factor (('+' | '-') expr_factor)*;
+expr_factor ::= expr_unary (('*' | '/' | '%') expr_unary)*;
+expr_unary ::= (('-' | '!') expr_unary) | expr_call | expr_primary;
+expr_call ::= IDENTIFIER ('(' (expr_root (',' expr_root)*)? ')');
+expr_primary ::= expr_grouping | expr_literal | IDENTIFIER;
+expr_literal ::= INTEGER;
+expr_grouping ::= '(' expr_root ')';

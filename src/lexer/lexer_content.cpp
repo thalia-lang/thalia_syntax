@@ -1,5 +1,4 @@
-/* Exception - Thalia syntax exceptions
- * Copyright (C) 2023 Stan Vlad <vstan02@protonmail.com>
+/* Copyright (C) 2023 Stan Vlad <vstan02@protonmail.com>
  *
  * This file is part of ThaliaSyntax.
  *
@@ -17,30 +16,25 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef THALIA_SYNTAX_EXCEPTION
-#define THALIA_SYNTAX_EXCEPTION
-
-#include <stdexcept>
-
-#include "thalia/syntax/token.hpp"
+#include "thalia/syntax/lexer_content.hpp"
 
 namespace thalia::syntax {
-	class exception: public std::runtime_error {
-		public:
-		  exception(const char* message, const token token)
-				: std::runtime_error(message), _target(token) {}
-
-			token where() const noexcept { return _target; }
-
-		private:
-			const token _target;
-	};
-
-	class unexpected_character: public exception {
-		public:
-			unexpected_character(const token token)
-				: exception("Unexpected character.", token) {}
-	};
+	extern void lexer_content::skip_whitespaces() {
+		while (true) {
+			switch (*(*this)) {
+				case ' ':
+				case '\r':
+				case '\t': {
+					++_index;
+					break;
+				}
+				case '\n': {
+					++_line;
+					++_index;
+					break;
+				}
+				default: return;
+			}
+		}
+	}
 }
-
-#endif // THALIA_SYNTAX_EXCEPTION

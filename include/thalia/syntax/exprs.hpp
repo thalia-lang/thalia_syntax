@@ -1,9 +1,8 @@
-/* Exprs - Thalia abstract syntax tree expressions
- * Copyright (C) 2023 Stan Vlad <vstan02@protonmail.com>
+/* Copyright (C) 2023 Stan Vlad <vstan02@protonmail.com>
  *
- * This file is part of Thalia.
+ * This file is part of ThaliaSyntax.
  *
- * Thalia is free software: you can redistribute it and/or modify
+ * ThaliaSyntax is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
