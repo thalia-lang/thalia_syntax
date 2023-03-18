@@ -142,7 +142,7 @@ namespace thalia::syntax {
 		std::string value = _code.value();
 		const keyword* result = std::find_if(
 			std::begin(keywords), std::end(keywords),
-			[&](const keyword& target) { return value == target.value; }
+			[&](const keyword& target) -> bool { return value == target.value; }
 		);
 
 		_tokens.push_back({

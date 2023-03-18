@@ -21,10 +21,12 @@
 
 #include <utility>
 #include <vector>
+#include <functional>
 
 #include "thalia/syntax/ast.hpp"
 #include "thalia/syntax/node.hpp"
 #include "thalia/syntax/parser/parser_content.hpp"
+#include "thalia/syntax/token.hpp"
 
 namespace thalia::syntax {
 	class expr_parser {
@@ -57,6 +59,9 @@ namespace thalia::syntax {
 		private:
 			node<expression> parse_assignment();
 			node<expression> parse_logic_or();
+			node<expression> parse_logic_and();
+			node<expression> parse_equality();
+			node<expression> parse_comparison();
 			node<expression> parse_literal();
 			node<expression> parse_grouping();
 			node<expression> parse_term();
@@ -65,6 +70,8 @@ namespace thalia::syntax {
 			node<expression> parse_primary();
 			node<expression> parse_call();
 			node<expression> parse_identifier();
+
+			node<expression> parse_binary(std::vector<token_type>, std::function<node<expression>()>);
 	};
 }
 

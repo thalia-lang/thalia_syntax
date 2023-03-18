@@ -16,6 +16,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <algorithm>
+#include <iterator>
+
+#include "thalia/syntax/token.hpp"
 #include "thalia/syntax/parser/parser_content.hpp"
 
 namespace thalia::syntax {
@@ -28,12 +32,9 @@ namespace thalia::syntax {
 	}
 
 	extern bool parser_content::match(std::vector<token_type> types) {
-		for (token_type type: types) {
-			if (check(type)) {
-				advance();
-				return true;
-			}
-		}
-		return false;
+		return std::any_of(
+			std::begin(types), std::end(types),
+			[&](token_type type) -> bool { return check(type); }
+		);
 	}
 }
